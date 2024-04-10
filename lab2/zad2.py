@@ -12,7 +12,6 @@ FIOLETOWY = (128, 0, 128)
 JASNY_NIEBIESKI = (0, 255, 255)
 POMARANCZOWY = (255, 165, 0)
 NIEBIESKI = (0, 0, 255)
-SZARY = (128, 128, 128)
 
 run = True
 while run:

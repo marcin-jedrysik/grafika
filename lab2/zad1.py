@@ -37,15 +37,11 @@ def draw_nonagon(x, y, radius, rotation):
         points.append((new_x, new_y))
     pygame.draw.polygon(win, CZERWONY, points)
 
-
 run = True
 
 nonagon_surface = pygame.Surface((300, 300), pygame.SRCALPHA)
 draw_nonagon(150, 150, 150, rotation_angle)
 nonagon_rect = nonagon_surface.get_rect(center=(width//2, height//2))
-
-
-
 
 while run:
     for event in pygame.event.get():
@@ -118,8 +114,6 @@ while run:
     win.fill((0, 0, 0))
 
     draw_nonagon(width // 2, height // 2, 150, 0)
-
-   
 
     pygame.display.update()
 
