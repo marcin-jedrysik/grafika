@@ -274,34 +274,45 @@
     } 
     
    
-    var filledNonagon = new SceneGraphNode();  
-    filledNonagon.doDraw = function(g) {
-        g.beginPath();
-        var numSides = 19; // Number of sides in the nonagon
-        var angleIncrement = (Math.PI * 2) / numSides; // Angle between each side
-        var radius = 0.3; // Radius of the nonagon
-        g.moveTo(radius * Math.cos(0), radius * Math.sin(0));
-        for (var i = 1; i <= numSides; i++) {
-            var angle = angleIncrement * i;
-            g.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
-        }
-        g.closePath();
-        g.fill();
+    var filledNonagon = new SceneGraphNode();
+filledNonagon.doDraw = function(g) {
+    g.beginPath();
+    var numSides = 19; 
+    var angleIncrement = (Math.PI * 2) / numSides; 
+    var radius = 0.3; 
+    g.moveTo(radius * Math.cos(0), radius * Math.sin(0));
+    for (var i = 1; i <= numSides; i++) {
+        var angle = angleIncrement * i;
+        var x = radius * Math.cos(angle);
+        var y = radius * Math.sin(angle);
+       
+        g.lineTo(x, y);
+        g.moveTo(0, 0); 
+        g.lineTo(x, y); 
     }
+    g.closePath();
+    g.stroke(); 
+}
+
     var filledNonagon2 = new SceneGraphNode();  
     filledNonagon2.doDraw = function(g) {
         g.beginPath();
-        var numSides = 19; // Number of sides in the nonagon
-        var angleIncrement = (Math.PI * 2) / numSides; // Angle between each side
-        var radius = 0.3; // Radius of the nonagon
+        var numSides = 19; 
+        var angleIncrement = (Math.PI * 2) / numSides; 
+        var radius = 0.3; 
         
         g.moveTo(radius * Math.cos(0), radius * Math.sin(0));
         for (var i = 1; i <= numSides; i++) {
             var angle = angleIncrement * i;
-            g.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
+            var x = radius * Math.cos(angle);
+            var y = radius * Math.sin(angle);
+            
+            g.lineTo(x, y);
+            g.moveTo(0, 0); 
+            g.lineTo(x, y);
         }
         g.closePath();
-        g.fill();
+        g.stroke();
     }
     
     

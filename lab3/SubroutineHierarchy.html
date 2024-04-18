@@ -187,11 +187,18 @@
         var radius = 0.3; // Radius of the nonagon
         graphics.moveTo(radius * Math.cos(0), radius * Math.sin(0));
         for (var i = 1; i <= numSides; i++) {
+            //var angle = angleIncrement * i;
+            //graphics.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
             var angle = angleIncrement * i;
-            graphics.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
+            var x = radius * Math.cos(angle);
+            var y = radius * Math.sin(angle);
+            
+            graphics.lineTo(x, y);
+            graphics.moveTo(0, 0); 
+            graphics.lineTo(x, y);
         }
         graphics.closePath();
-        graphics.fill();
+        graphics.stroke();
     }
 
  
