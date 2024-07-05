@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<!--
+ Use OpenGL and GLUT to draw a pyramid using two fan triangles and hierarchical modeling.
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <title>OpenGL Shapes</title>
+    <script src="glsim.js"></script> <!-- Load the OpenGL 1.1 simulation code -->
+    <script>
+        let rotateX = -15; // Rotation about the x-axis
+        let rotateY = 15; // Rotation about the y-axis
+        let rotateZ = 0; // Rotation about the z-axis
+        let objectNumber = 1;
+
+        document.addEventListener('keydown', function(event) {
+            if (event.keyCode === 49) { // Key '1'
+                objectNumber = 1;
+            } else if (event.keyCode === 50) { // Key '2'
+                objectNumber = 2;
+            }
+            display(); // Redraw the scene
+        });
+
+
+        // Function to draw a triangle with a specified color
+        function triangle(r, g, b) {
+            glColor3f(r, g, b);
+            glBegin(GL_TRIANGLES);
+            glVertex3f(0.5, 0, 0);
+            glVertex3f(0.5, -0.5, 0);
+            glVertex3f(-0.5, -0.5, 0);
+            glEnd();
+        }
+
+        // Function to draw a polygon with a specified number of vertices and color
+        function polygon(numVertices, r, g, b) {
+            glColor3f(r, g, b);
+            glBegin(GL_TRIANGLE_FAN);
+            for (let i = 0; i < numVertices; i++) {
+                let angle = 2 * Math.PI * i / numVertices;
+                glVertex3f(0.5 * Math.cos(angle), -0.5, 0.5 * Math.sin(angle));
+            }
+            glEnd();
+        }
+
+        // Function to draw a pyramid using two fan triangles
+        function pyramid() {
+            // Draw the base polygon with 19 vertices
+            polygon(19, 1, 0, 0);
+
+            // Draw the triangular faces connecting the base to the apex
+            glBegin(GL_TRIANGLES);
+            for (let i = 0; i < 18; i++) {
+                let theta1 = (2 * Math.PI * i) / 19;
+                let theta2 = (2 * Math.PI * (i + 1)) / 19;
+
+                let x1 = 0.5 * Math.cos(theta1);
+                let z1 = 0.5 * Math.sin(theta1);
+
+                let x2 = 0.5 * Math.cos(theta2);
+                let z2 = 0.5 * Math.sin(theta2);
+
+                // Vertex at the apex
+                glVertex3f(0, 0.5, 0);
+
+                // Vertices at the base
+                glVertex3f(x1, -0.5, z1);
+                glVertex3f(x2, -0.5, z2);
+            }
+            glEnd();
+        }
+
+        // Function to draw a helix using GL_LINES
+        function helix() {
+            glPushMatrix();
+            glColor3f(0, 1, 0); // Set color to green
+            glBegin(GL_LINES);
+            let angle;
+            let radius = 0.2; // Increased radius
+            let height = 1; // Increased height
+            let numTurns = 5;
+            let numSegments = 100;
+            for (let i = 0; i <= numSegments; i++) {
+                angle = (i / numSegments) * 2 * Math.PI * numTurns;
+                let x1 = radius * Math.cos(angle);
+                let y1 = radius * Math.sin(angle);
+                let z1 = (i / numSegments) * height - height / 2;
+                angle = ((i + 1) / numSegments) * 2 * Math.PI * numTurns;
+                let x2 = radius * Math.cos(angle);
+                let y2 = radius * Math.sin(angle);
+                let z2 = ((i + 1) / numSegments) * height - height / 2;
+                glVertex3f(x1, y1, z1);
+                glVertex3f(x2, y2, z2);
+            }
+            glEnd();
+            glPopMatrix();
+        }
+
+        // Function to handle keyboard events
+        function doKeyDown(evt) {
+            let key = evt.keyCode;
+            if (key == 37) // Left arrow key
+                rotateY -= 15;
+            else if (key == 39) // Right arrow key
+                rotateY += 15;
+            else if (key == 40) // Down arrow key
+                rotateX += 15;
+            else if (key == 38) // Up arrow key
+                rotateX -= 15;
+            else if (key == 33) // Page up key
+                rotateZ += 15;
+            else if (key == 34) // Page down key
+                rotateZ -= 15;
+            else if (key == 36) // Home key
+                rotateX = rotateY = rotateZ = 0;
+            display(); // Redraw the scene
+        }
+
+        // Function to initialize WebGL
+        function initGL() {
+            glMatrixMode(GL_PROJECTION);
+            glOrtho(-1, 1, -1, 1, -1, 1);
+            glMatrixMode(GL_MODELVIEW);
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(0, 0, 0, 1);
+        }
+
+        // Function to draw the scene
+        function display() {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glLoadIdentity();
+            glRotatef(rotateZ, 0, 0, 1);
+            glRotatef(rotateY, 0, 1, 0);
+            glRotatef(rotateX, 1, 0, 0);
+
+            if (objectNumber === 1) {
+                helix(); // Draw the helix for object 1
+            } else if (objectNumber === 2) {
+                pyramid(); // Draw the pyramid for object 2
+            }
+
+            glFlush(); // Flush drawing commands
+        }
+
+        // Function to initialize the program
+        function init() {
+            try {
+                glsimUse("glcanvas"); // OpenGL will draw to the canvas with id="glcanvas".
+            } catch (e) {
+                document.getElementById("canvas-holder").innerHTML =
+                    "Sorry, an error occurred:<br>" + e;
+                return;
+            }
+            document.onkeydown = doKeyDown; // Set up keyboard event handler
+            initGL(); // Initialize WebGL
+            display(); // Draw the initial scene
+        }
+    </script>
+</head>
+
+<body onload="init()">
+
+    <h3>OpenGL Shapes</h3>
+    <p>(Rotate using arrow keys, page up, page down, and home keys. Press 1 for the helix and 2 for the pyramid.)</p>
+
+    <noscript>
+        <p><b>Sorry, this page requires JavaScript!</b></p>
+    </noscript>
+
+    <div id="canvas-holder">
+        <canvas id="glcanvas" width="500" height="500"></canvas>
+    </div>
+
+</body>
+
+</html>
